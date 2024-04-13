@@ -1,6 +1,15 @@
 # mruby-libdeflate
 mruby wrapper for libdeflate
 
+Installation
+============
+
+You have to install libdeflate with development headers first. Then add
+```ruby
+conf.gem mgem: 'mruby-libdeflate'
+```
+to your build_config.rb
+
 Examples
 ========
 Compression
