@@ -108,7 +108,7 @@ mrb_libdeflate_deflate_decompress(mrb_state *mrb, mrb_value self)
       break;
     }
 
-    mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
+    out = mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
   }
 
   if (likely(decompress_result == LIBDEFLATE_SUCCESS)) {
@@ -136,7 +136,7 @@ mrb_libdeflate_zlib_decompress(mrb_state *mrb, mrb_value self)
       break;
     }
 
-    mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
+    out = mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
   }
 
   if (likely(decompress_result == LIBDEFLATE_SUCCESS)) {
@@ -164,7 +164,7 @@ mrb_libdeflate_gzip_decompress(mrb_state *mrb, mrb_value self)
       break;
     }
 
-    mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
+    out = mrb_str_resize(mrb, out, RSTRING_CAPA(out) << 1);
   }
 
   if (likely(decompress_result == LIBDEFLATE_SUCCESS)) {
@@ -179,20 +179,32 @@ mrb_mruby_libdeflate_gem_init(mrb_state* mrb)
 {
   struct RClass *deflate_class, *deflate_compressor_class, *deflate_decompressor_class;
 
-  deflate_class = mrb_define_class(mrb, "Deflate", mrb->object_class);
-  deflate_compressor_class = mrb_define_class_under(mrb, deflate_class, "Compressor", mrb->object_class);
-  MRB_SET_INSTANCE_TT(deflate_compressor_class, MRB_TT_CDATA);
-  mrb_define_method(mrb, deflate_compressor_class, "initialize",  mrb_libdeflate_alloc_compressor,  MRB_ARGS_OPT(1));
-  mrb_define_method(mrb, deflate_compressor_class, "deflate",     mrb_libdeflate_deflate_compress,  MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, deflate_compressor_class, "zlib",        mrb_libdeflate_zlib_compress,     MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, deflate_compressor_class, "gzip",        mrb_libdeflate_gzip_compress,     MRB_ARGS_REQ(1));
+  deflate_class = mrb_define_class_id(mrb, MRB_SYM(Deflate), mrb->object_class);
 
-  deflate_decompressor_class = mrb_define_class_under(mrb, deflate_class, "Decompressor", mrb->object_class);
+  deflate_compressor_class = mrb_define_class_under_id(mrb, deflate_class, MRB_SYM(Compressor), mrb->object_class);
+  MRB_SET_INSTANCE_TT(deflate_compressor_class, MRB_TT_CDATA);
+
+  mrb_define_method_id(mrb, deflate_compressor_class, MRB_SYM(initialize),
+                       mrb_libdeflate_alloc_compressor, MRB_ARGS_OPT(1));
+  mrb_define_method_id(mrb, deflate_compressor_class, MRB_SYM(deflate),
+                       mrb_libdeflate_deflate_compress, MRB_ARGS_REQ(1));
+  mrb_define_method_id(mrb, deflate_compressor_class, MRB_SYM(zlib),
+                       mrb_libdeflate_zlib_compress, MRB_ARGS_REQ(1));
+  mrb_define_method_id(mrb, deflate_compressor_class, MRB_SYM(gzip),
+                       mrb_libdeflate_gzip_compress, MRB_ARGS_REQ(1));
+
+  deflate_decompressor_class = mrb_define_class_under_id(mrb, deflate_class, MRB_SYM(Decompressor), mrb->object_class);
   MRB_SET_INSTANCE_TT(deflate_decompressor_class, MRB_TT_CDATA);
-  mrb_define_method(mrb, deflate_decompressor_class, "initialize",  mrb_libdeflate_alloc_decompressor,  MRB_ARGS_NONE());
-  mrb_define_method(mrb, deflate_decompressor_class, "deflate",     mrb_libdeflate_deflate_decompress,  MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, deflate_decompressor_class, "zlib",        mrb_libdeflate_zlib_decompress,     MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, deflate_decompressor_class, "gzip",        mrb_libdeflate_gzip_decompress,     MRB_ARGS_REQ(1));
+
+  mrb_define_method_id(mrb, deflate_decompressor_class, MRB_SYM(initialize),
+                       mrb_libdeflate_alloc_decompressor, MRB_ARGS_NONE());
+  mrb_define_method_id(mrb, deflate_decompressor_class, MRB_SYM(deflate),
+                       mrb_libdeflate_deflate_decompress, MRB_ARGS_REQ(1));
+  mrb_define_method_id(mrb, deflate_decompressor_class, MRB_SYM(zlib),
+                       mrb_libdeflate_zlib_decompress, MRB_ARGS_REQ(1));
+  mrb_define_method_id(mrb, deflate_decompressor_class, MRB_SYM(gzip),
+                       mrb_libdeflate_gzip_decompress, MRB_ARGS_REQ(1));
 }
+
 
 void mrb_mruby_libdeflate_gem_final(mrb_state* mrb) {}

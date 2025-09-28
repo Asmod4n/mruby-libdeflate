@@ -5,6 +5,7 @@
 #include <libdeflate.h>
 #include <mruby/string.h>
 #include <mruby/class.h>
+#include <mruby/presym.h>
 
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
