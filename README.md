@@ -4,7 +4,7 @@ mruby wrapper for libdeflate
 Installation
 ============
 
-You have to install libdeflate with development headers first. Then add
+Add this
 ```ruby
 conf.gem mgem: 'mruby-libdeflate'
 ```
