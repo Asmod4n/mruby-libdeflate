@@ -19,7 +19,7 @@ mrb_libdeflate_alloc_compressor(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_libdeflate_deflate_compress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_compressor *compressor = DATA_PTR(self);
+  struct libdeflate_compressor *compressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_compressor_type);
 
   char *in;
   mrb_int in_nbytes;
@@ -34,7 +34,7 @@ mrb_libdeflate_deflate_compress(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_libdeflate_zlib_compress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_compressor *compressor = DATA_PTR(self);
+  struct libdeflate_compressor *compressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_compressor_type);
 
   char *in;
   mrb_int in_nbytes;
@@ -49,7 +49,7 @@ mrb_libdeflate_zlib_compress(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_libdeflate_gzip_compress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_compressor *compressor = DATA_PTR(self);
+  struct libdeflate_compressor *compressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_compressor_type);
 
   char *in;
   mrb_int in_nbytes;
@@ -93,7 +93,7 @@ next_power_of_two(long n)
 static mrb_value
 mrb_libdeflate_deflate_decompress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_decompressor *decompressor = DATA_PTR(self);
+  struct libdeflate_decompressor *decompressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_decompressor_type);
   char *in;
   mrb_int in_bytes;
   mrb_get_args(mrb, "s", &in, &in_bytes);
@@ -121,7 +121,7 @@ mrb_libdeflate_deflate_decompress(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_libdeflate_zlib_decompress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_decompressor *decompressor = DATA_PTR(self);
+  struct libdeflate_decompressor *decompressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_decompressor_type);
   char *in;
   mrb_int in_bytes;
   mrb_get_args(mrb, "s", &in, &in_bytes);
@@ -149,7 +149,7 @@ mrb_libdeflate_zlib_decompress(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_libdeflate_gzip_decompress(mrb_state *mrb, mrb_value self)
 {
-  struct libdeflate_decompressor *decompressor = DATA_PTR(self);
+  struct libdeflate_decompressor *decompressor = mrb_data_get_ptr(mrb, self, &mrb_libdeflate_decompressor_type);
   char *in;
   mrb_int in_bytes;
   mrb_get_args(mrb, "s", &in, &in_bytes);
@@ -183,6 +183,7 @@ mrb_mruby_libdeflate_gem_init(mrb_state* mrb)
 
   deflate_compressor_class = mrb_define_class_under_id(mrb, deflate_class, MRB_SYM(Compressor), mrb->object_class);
   MRB_SET_INSTANCE_TT(deflate_compressor_class, MRB_TT_CDATA);
+  mrb_undef_method_id(mrb, deflate_compressor_class, MRB_SYM(initialize_copy));
 
   mrb_define_method_id(mrb, deflate_compressor_class, MRB_SYM(initialize),
                        mrb_libdeflate_alloc_compressor, MRB_ARGS_OPT(1));
@@ -195,6 +196,7 @@ mrb_mruby_libdeflate_gem_init(mrb_state* mrb)
 
   deflate_decompressor_class = mrb_define_class_under_id(mrb, deflate_class, MRB_SYM(Decompressor), mrb->object_class);
   MRB_SET_INSTANCE_TT(deflate_decompressor_class, MRB_TT_CDATA);
+  mrb_undef_method_id(mrb, deflate_decompressor_class, MRB_SYM(initialize_copy));
 
   mrb_define_method_id(mrb, deflate_decompressor_class, MRB_SYM(initialize),
                        mrb_libdeflate_alloc_decompressor, MRB_ARGS_NONE());
