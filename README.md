@@ -4,7 +4,7 @@ mruby wrapper for libdeflate
 Installation
 ============
 
-You have to install libdeflate with development headers first. Then add
+Add this
 ```ruby
 conf.gem mgem: 'mruby-libdeflate'
 ```
@@ -31,3 +31,12 @@ puts decompressor.zlib(zlib)
 puts decompressor.gzip(gzip)
 ```
 Outputs hallo 3 times
+
+## Acknowledgments
+
+This project bundles [libdeflate](https://github.com/ebiggers/libdeflate),  
+a fast compression/decompression library by Eric Biggers.
+
+libdeflate is distributed under the MIT license.  
+The original source and license text are included in `deps/libdeflate/`.
+
