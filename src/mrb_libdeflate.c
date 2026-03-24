@@ -56,6 +56,7 @@ mrb_libdeflate_gzip_compress(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "s", &in, &in_nbytes);
 
   mrb_value out = mrb_str_buf_new(mrb, libdeflate_gzip_compress_bound(compressor, in_nbytes));
+  mrb_gc_protect(mrb, out);
 
   size_t out_len = libdeflate_gzip_compress(compressor, in, in_nbytes, RSTRING_PTR(out), RSTRING_CAPA(out));
   return mrb_str_resize(mrb, out, out_len);
@@ -99,6 +100,7 @@ mrb_libdeflate_deflate_decompress(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "s", &in, &in_bytes);
 
   mrb_value out = mrb_str_buf_new(mrb, next_power_of_two(in_bytes) << 4);
+  mrb_gc_protect(mrb, out);
   enum libdeflate_result decompress_result;
   size_t actual_out_nbytes_ret;
 
@@ -127,6 +129,7 @@ mrb_libdeflate_zlib_decompress(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "s", &in, &in_bytes);
 
   mrb_value out = mrb_str_buf_new(mrb, next_power_of_two(in_bytes) << 4);
+  mrb_gc_protect(mrb, out);
   enum libdeflate_result decompress_result;
   size_t actual_out_nbytes_ret;
 
@@ -155,6 +158,7 @@ mrb_libdeflate_gzip_decompress(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "s", &in, &in_bytes);
 
   mrb_value out = mrb_str_buf_new(mrb, next_power_of_two(in_bytes) << 4);
+  mrb_gc_protect(mrb, out);
   enum libdeflate_result decompress_result;
   size_t actual_out_nbytes_ret;
 
